@@ -42,6 +42,11 @@ class AuthController extends ApiController
     public function getTokenUser(Request $request, UserRepository $userRepository, JWTTokenManagerInterface $JWTManager)
     {
         $username = $request->get('username');
+        $password = $request->get('password');
+
+        if (empty($username) || empty($password)) {
+            return $this->respondValidationError("Invalid Username or Password");
+        }
 
         return new JsonResponse(['token' => $JWTManager->create($userRepository->findOneBy(
             array('username' => $username)
